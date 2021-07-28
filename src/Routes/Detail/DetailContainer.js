@@ -5,7 +5,7 @@ import DetailPresenter from "./DetailPresenter";
 export default class Detail extends React.Component{
     constructor(props){
         super(props);
-        const {location: {pathname}} = props;
+        const {location: {pathname}} = this.props;
         this.state = {
             result: null,
             error: null,
@@ -17,16 +17,15 @@ export default class Detail extends React.Component{
     async componentDidMount(){
         const {match: {params: {id}}, history: {push}} = this.props;
         const { isMovie } = this.state;
+        // this.isMovie = pathname.includes("/movie/");
         const parsedId = parseInt(id);
         if (isNaN(parsedId)){
-            return push("/");
+            return isMovie ? push("/") : push("/tv");
         }
         let result = null;
         try{
             if (isMovie){
                 ({data: result} = await moviesApi.movieDetail(parsedId));
-                // const request = await moviesApi.movieDetail(parsedId);
-                // result = request.data;
             } else{
                 ({data: result} = await tvApi.showDetail(parsedId));
             }
@@ -43,8 +42,7 @@ export default class Detail extends React.Component{
     }
 
     render() {
-        console.log(this.state);
-        const { result, error, loading } = this.state;
-        return <DetailPresenter result={result} error={error} loading={loading} />
+        const { result, isMovie, error, loading} = this.state;
+        return <DetailPresenter result={result} isMovie={isMovie} error={error} loading={loading} />
     }
 }

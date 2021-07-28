@@ -1,8 +1,12 @@
 import React from "react";
+import {Link, Route} from "react-router-dom";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import Loader from "Components/Loader";
+import VideoTab from "Routes/DetailTab/VideoTab";
+import ProductionTab from "Routes/DetailTab/ProductionTab";
+import SeriesTab from "Routes/DetailTab/SeriesTab";
 
 const Container = styled.div`
     height: calc(100vh-50px);
@@ -55,6 +59,11 @@ const ItemContainer = styled.div`
 
 const Item = styled.span``;
 
+const IMDBLink = styled.a`
+    position: relative;
+    z-index: 1;
+`;
+
 const Divider = styled.span`
     margin: 0px 10px;
 `;
@@ -66,7 +75,21 @@ const Overview = styled.p`
     width: 50%;
 `;
 
-const DetailPresenter = ({result, error, loading}) => 
+const Tab = styled.div`
+    display: flex;
+    margin-top: 30px;
+    width: 50%;
+`;
+
+const TabItem = styled.li`
+    text-align: left;
+    margin-right: 100px;
+    display: flex;
+    align-items: center;
+    z-index: 1;
+`;
+
+const DetailPresenter = ({result, isMovie, error, loading}) => 
     loading ? <Loader /> : (
     <Container>
         <Backdrop bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`} />
@@ -80,8 +103,26 @@ const DetailPresenter = ({result, error, loading}) =>
                     <Item>{result.runtime ? result.runtime : result.episode_run_time[0]} min</Item>
                     <Divider>•</Divider>
                     <Item>{result.genres && result.genres.map((genre, index) => index === result.genres.length-1 ? genre.name : `${genre.name} / `)}</Item>
+                    <Divider>{result.imdb_id ? "•" : ""}</Divider>
+                    <Item>
+                        <IMDBLink href={result.imdb_id ? `https://www.imdb.com/title/${result.imdb_id}`:null} target="_blank">{result.imdb_id ? "IMDB »" : ""} </IMDBLink>
+                    </Item> 
                 </ItemContainer>
                 <Overview>{result.overview}</Overview>
+                <Tab>
+                    <TabItem>
+                        <Link to={(isMovie ? `/movie/${result.id}/video` : `/show/${result.id}/video`)}>Video</Link>
+                    </TabItem>
+                    <TabItem>
+                        <Link to={isMovie && (isMovie ? `/movie/${result.id}/production` : `/show/${result.id}/production`)}>Production Companies & Countries</Link>
+                    </TabItem>
+                    <TabItem>
+                        {!isMovie ? <Link to={`/show/${result.id}/series`}>Series</Link> : ""}
+                    </TabItem>
+                </Tab>
+                <Route path={isMovie ? "/movie/:id/video" : "/show/:id/video"} component = {VideoTab}/>
+                <Route path={isMovie ? "/movie/:id/production" : "/show/:id/production"} component = {ProductionTab} />
+                <Route path="/show/:id/series" component={SeriesTab} />
             </Data>
         </Content>
     </Container>
