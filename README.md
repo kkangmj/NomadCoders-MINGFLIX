@@ -32,3 +32,6 @@ Nomad Coder의 ReactJS 멤버십 course + 2 week challenge
 - [x] grid 이해하기
 - [x] 아이콘 바꾸기
 - [x] 검색 버그 해결하기
+- [x] detail에서 화면 크기 상관 없이 포스터 비율 유지되도록
+- [ ] IMDB & Tabs 손보기
+- [ ] 반응형 웹으로 만들기
