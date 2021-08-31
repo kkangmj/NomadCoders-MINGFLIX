@@ -104,9 +104,12 @@ const Tab = styled.div`
   z-index: 1;
   border: 1.5px solid rgba(255, 255, 255, 0.5);
   border-radius: 3px;
-  &:nth-child(1) {
+  &.video {
     padding-top: 10px;
   }
+  /* &:nth-child(1) {
+
+  } */
   &:hover {
     background-color: rgba(255, 255, 255, 0.5);
   }
@@ -199,31 +202,35 @@ const DetailPresenter = withRouter(
                 </Item>
               </ItemContainer>
               <Overview>{result.overview}</Overview>
-
               <TabContainer>
-                <Tab active={pathname.includes("/video")}>
-                  <Link
-                    to={
-                      isMovie
-                        ? `/movie/${result.id}/video`
-                        : `/show/${result.id}/video`
-                    }
-                  >
-                    <TabName>Video</TabName>
-                  </Link>
-                </Tab>
-                <Tab active={pathname.includes("/production")}>
-                  <Link
-                    to={
-                      isMovie &&
-                      (isMovie
-                        ? `/movie/${result.id}/production`
-                        : `/show/${result.id}/production`)
-                    }
-                  >
-                    <TabName>Production Companies & Countries</TabName>
-                  </Link>
-                </Tab>
+                {result.videos.results.length > 0 && (
+                  <Tab active={pathname.includes("/video")} className="video">
+                    <Link
+                      to={
+                        isMovie
+                          ? `/movie/${result.id}/video`
+                          : `/show/${result.id}/video`
+                      }
+                    >
+                      <TabName>Video</TabName>
+                    </Link>
+                  </Tab>
+                )}
+                {result.production_companies.length > 0 &&
+                  result.production_countries.length > 0 && (
+                    <Tab active={pathname.includes("/production")}>
+                      <Link
+                        to={
+                          isMovie &&
+                          (isMovie
+                            ? `/movie/${result.id}/production`
+                            : `/show/${result.id}/production`)
+                        }
+                      >
+                        <TabName>Production Companies & Countries</TabName>
+                      </Link>
+                    </Tab>
+                  )}
               </TabContainer>
               <Route path="/movie/:id/video" component={VideoTab} />
               <Route path="/tv/:id/video" component={VideoTab} />
