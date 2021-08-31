@@ -1,13 +1,11 @@
 import React from "react";
-import { Link, Route } from "react-router-dom";
+import { Link, Route, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Helmet from "react-helmet";
 import Loader from "Components/Loader";
 import Message from "Components/Message";
-import VideoTab from "Routes/DetailTab/VideoTab";
-import ProductionTab from "Routes/DetailTab/ProductionTab";
-import SeriesTab from "Routes/DetailTab/SeriesTab";
+import VideoTab from "Routes/VideoTab";
 
 const Container = styled.div`
   height: calc(100vh - 50px);
@@ -46,7 +44,7 @@ const CoverWrapper = styled.div`
 const Cover = styled.div`
   float: left;
   height: 0;
-  width:100%;
+  width: 100%;
   padding-top: 75%;
   padding-bottom: 75%;
   background-image: url(${(props) => props.bgImage});
@@ -87,144 +85,154 @@ const Overview = styled.p`
   width: 80%;
 `;
 
-const Tab = styled.div`
+const TabContainer = styled.div`
   display: flex;
   margin-top: 30px;
-  width: 50%;
+  width: 80%;
 `;
 
-const TabItem = styled.li`
-  text-align: left;
-  margin-right: 100px;
-  display: flex;
-  align-items: center;
+const Tab = styled.div`
+  text-align: center;
+  padding: 5px;
+  margin-right: 10px;
+  width: 160px;
+  font-weight: 500;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.6);
+  background-color: ${(props) =>
+    props.active ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0.3)"};
+  cursor: pointer;
   z-index: 1;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-radius: 3px;
+  &:nth-child(1) {
+    padding-top: 10px;
+  }
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
 `;
 
-const DetailPresenter = ({ result, isMovie, error, loading }) =>
-  loading ? (
-    <>
-      <Helmet>
-        <title>Loading</title>
-      </Helmet>
-      <Loader />
-    </>
-  ) : error ? (
-    <>
-      <Helmet>
-        <title>Error</title>
-      </Helmet>
-      <Message text={error} color="#e74c3c" />
-    </>
-  ) : (
-    <>
-      <Helmet>
-        <title>
-          {result.original_title ? result.original_title : result.original_name}{" "}
-          | MINGFLIX
-        </title>
-      </Helmet>
-      <Container>
-        <Backdrop
-          bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`}
-        />
-        <Content>
-          <CoverWrapper>
-          <Cover
-            bgImage={
-              result.poster_path
-                ? `https://image.tmdb.org/t/p/original${result.poster_path}`
-                : require("../../Assets/noPosterSmall.jpg")
-            }
+const TabName = styled.div`
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+`;
+
+const DetailPresenter = withRouter(
+  ({ result, isMovie, error, loading, location: { pathname } }) =>
+    loading ? (
+      <>
+        <Helmet>
+          <title>Loading</title>
+        </Helmet>
+        <Loader />
+      </>
+    ) : error ? (
+      <>
+        <Helmet>
+          <title>Error</title>
+        </Helmet>
+        <Message text={error} color="#e74c3c" />
+      </>
+    ) : (
+      <>
+        <Helmet>
+          <title>
+            {result.original_title
+              ? result.original_title
+              : result.original_name}{" "}
+            | MINGFLIX
+          </title>
+        </Helmet>
+        <Container>
+          <Backdrop
+            bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`}
           />
-          </CoverWrapper>
-          <Data>
-            <Title>
-              {result.original_title
-                ? result.original_title
-                : result.original_name}
-            </Title>
-            <ItemContainer>
-              <Item>
-                {result.release_date && result.release_date
-                  ? result.release_date.substring(0, 4)
-                  : result.first_air_date.substring(0, 4)}
-              </Item>
-              <Divider>•</Divider>
-              <Item>
-                {result.runtime ? result.runtime : result.episode_run_time[0]}{" "}
-                min
-              </Item>
-              <Divider>•</Divider>
-              <Item>
-                {result.genres &&
-                  result.genres.map((genre, index) =>
-                    index === result.genres.length - 1
-                      ? genre.name
-                      : `${genre.name} / `
-                  )}
-              </Item>
-              <Divider>{result.imdb_id ? "•" : ""}</Divider>
-              <Item>
-                <IMDBLink
-                  href={
-                    result.imdb_id
-                      ? `https://www.imdb.com/title/${result.imdb_id}`
-                      : null
-                  }
-                  target="_blank"
-                >
-                  {result.imdb_id ? "IMDB »" : ""}{" "}
-                </IMDBLink>
-              </Item>
-            </ItemContainer>
-            <Overview>{result.overview}</Overview>
-            <Tab>
-              <TabItem>
-                <Link
-                  to={
-                    isMovie
-                      ? `/movie/${result.id}/video`
-                      : `/show/${result.id}/video`
-                  }
-                >
-                  Video
-                </Link>
-              </TabItem>
-              <TabItem>
-                <Link
-                  to={
-                    isMovie &&
-                    (isMovie
-                      ? `/movie/${result.id}/production`
-                      : `/show/${result.id}/production`)
-                  }
-                >
-                  Production Companies & Countries
-                </Link>
-              </TabItem>
-              <TabItem>
-                {!isMovie ? (
-                  <Link to={`/show/${result.id}/series`}>Series</Link>
-                ) : (
-                  ""
-                )}
-              </TabItem>
-            </Tab>
-            <Route
-              path={isMovie ? "/movie/:id/video" : "/show/:id/video"}
-              component={VideoTab}
-            />
-            <Route
-              path={isMovie ? "/movie/:id/production" : "/show/:id/production"}
-              component={ProductionTab}
-            />
-            <Route path="/show/:id/series" component={SeriesTab} />
-          </Data>
-        </Content>
-      </Container>
-    </>
-  );
+          <Content>
+            <CoverWrapper>
+              <Cover
+                bgImage={
+                  result.poster_path
+                    ? `https://image.tmdb.org/t/p/original${result.poster_path}`
+                    : require("../../Assets/noPosterSmall.jpg")
+                }
+              />
+            </CoverWrapper>
+            <Data>
+              <Title>
+                {result.original_title
+                  ? result.original_title
+                  : result.original_name}
+              </Title>
+              <ItemContainer>
+                <Item>
+                  {result.release_date && result.release_date
+                    ? result.release_date.substring(0, 4)
+                    : result.first_air_date.substring(0, 4)}
+                </Item>
+                <Divider>•</Divider>
+                <Item>
+                  {result.runtime ? result.runtime : result.episode_run_time[0]}{" "}
+                  min
+                </Item>
+                <Divider>•</Divider>
+                <Item>
+                  {result.genres &&
+                    result.genres.map((genre, index) =>
+                      index === result.genres.length - 1
+                        ? genre.name
+                        : `${genre.name} / `
+                    )}
+                </Item>
+                <Divider>{result.imdb_id ? "•" : ""}</Divider>
+                <Item>
+                  <IMDBLink
+                    href={
+                      result.imdb_id
+                        ? `https://www.imdb.com/title/${result.imdb_id}`
+                        : null
+                    }
+                    target="_blank"
+                  >
+                    {result.imdb_id ? "IMDB »" : ""}{" "}
+                  </IMDBLink>
+                </Item>
+              </ItemContainer>
+              <Overview>{result.overview}</Overview>
+
+              <TabContainer>
+                <Tab active={pathname.includes("/video")}>
+                  <Link
+                    to={
+                      isMovie
+                        ? `/movie/${result.id}/video`
+                        : `/show/${result.id}/video`
+                    }
+                  >
+                    <TabName>Video</TabName>
+                  </Link>
+                </Tab>
+                <Tab active={pathname.includes("/production")}>
+                  <Link
+                    to={
+                      isMovie &&
+                      (isMovie
+                        ? `/movie/${result.id}/production`
+                        : `/show/${result.id}/production`)
+                    }
+                  >
+                    <TabName>Production Companies & Countries</TabName>
+                  </Link>
+                </Tab>
+              </TabContainer>
+              <Route path="/movie/:id/video" component={VideoTab} />
+              <Route path="/tv/:id/video" component={VideoTab} />
+            </Data>
+          </Content>
+        </Container>
+      </>
+    )
+);
 
 DetailPresenter.propTypes = {
   result: PropTypes.object,
