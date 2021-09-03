@@ -13,12 +13,12 @@ const Container = styled.div`
       : props.videoNum === 2
       ? "repeat(2, 1fr)"
       : "repeat(3, 1fr)"};
-  /* width: 100%; */
   height: 45%;
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
   display: grid;
-  /* grid-template-columns: repeat(3, 1fr); */
+  align-items: center;
+  justify-items: center;
 `;
 
 const Error = styled.div`
@@ -29,17 +29,20 @@ const Error = styled.div`
   text-align: center;
 `;
 
-const VideoTabPresenter = ({ videoKeys, error, loading }) => (
-  <Container videoNum={videoKeys.length}>
-    {error ? (
-      <Error>{error}</Error>
-    ) : (
-      videoKeys.map((video, index) =>
-        index < 3 ? <Video key={index} video={video} /> : ""
-      )
-    )}
-  </Container>
-);
+const VideoTabPresenter = ({ videoKeys, error, loading }) =>
+  loading ? (
+    ""
+  ) : (
+    <Container videoNum={videoKeys.length}>
+      {error ? (
+        <Error>{error}</Error>
+      ) : (
+        videoKeys.map((video, index) =>
+          index < 3 ? <Video key={index} video={video} /> : ""
+        )
+      )}
+    </Container>
+  );
 
 VideoTabPresenter.propTypes = {
   videoKeys: PropTypes.array,

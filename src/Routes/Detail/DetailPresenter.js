@@ -6,6 +6,7 @@ import Helmet from "react-helmet";
 import Loader from "Components/Loader";
 import Message from "Components/Message";
 import VideoTab from "Routes/VideoTab";
+import ProductionTab from "Routes/ProductionTab";
 
 const Container = styled.div`
   height: calc(100vh - 50px);
@@ -89,6 +90,7 @@ const TabContainer = styled.div`
   display: flex;
   margin-top: 30px;
   width: 80%;
+  height: 42px;
 `;
 
 const Tab = styled.div`
@@ -105,11 +107,8 @@ const Tab = styled.div`
   border: 1.5px solid rgba(255, 255, 255, 0.5);
   border-radius: 3px;
   &.video {
-    padding-top: 10px;
+    padding-top: 12px;
   }
-  /* &:nth-child(1) {
-
-  } */
   &:hover {
     background-color: rgba(255, 255, 255, 0.5);
   }
@@ -201,7 +200,11 @@ const DetailPresenter = withRouter(
                   </IMDBLink>
                 </Item>
               </ItemContainer>
-              <Overview>{result.overview}</Overview>
+              <Overview>
+                {result.overview.length > 400
+                  ? `${result.overview.substring(0, 400)}...`
+                  : `${result.overview}`}
+              </Overview>
               <TabContainer>
                 {result.videos.results.length > 0 && (
                   <Tab active={pathname.includes("/video")} className="video">
@@ -221,10 +224,9 @@ const DetailPresenter = withRouter(
                     <Tab active={pathname.includes("/production")}>
                       <Link
                         to={
-                          isMovie &&
-                          (isMovie
+                          isMovie
                             ? `/movie/${result.id}/production`
-                            : `/show/${result.id}/production`)
+                            : `/show/${result.id}/production`
                         }
                       >
                         <TabName>Production Companies & Countries</TabName>
@@ -233,7 +235,9 @@ const DetailPresenter = withRouter(
                   )}
               </TabContainer>
               <Route path="/movie/:id/video" component={VideoTab} />
-              <Route path="/tv/:id/video" component={VideoTab} />
+              <Route path="/show/:id/video" component={VideoTab} />
+              <Route path="/movie/:id/production" component={ProductionTab} />
+              <Route path="/show/:id/production" component={ProductionTab} />
             </Data>
           </Content>
         </Container>

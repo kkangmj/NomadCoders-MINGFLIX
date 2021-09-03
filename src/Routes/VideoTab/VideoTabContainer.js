@@ -1,23 +1,33 @@
 import React from "react";
-import { moviesApi } from "api";
-import VideoTabPresenter from "./VideoTabPresenter"
+import { moviesApi, tvApi } from "api";
+import VideoTabPresenter from "./VideoTabPresenter";
 
 export default class VideoTab extends React.Component {
-
   state = {
     videoKeys: [],
+    isMovie: true,
     error: null,
     loading: true,
   };
 
   getVideoKeys = async (id) => {
     try {
-      const {
-        data: {
-          videos: { results: videoKeys },
-        },
-      } = await moviesApi.movieDetail(id);
-      this.setState({ videoKeys });
+      if (this.state.isMovie) {
+        const {
+          data: {
+            videos: { results: videoKeys },
+          },
+        } = await moviesApi.movieDetail(id);
+        this.setState({ videoKeys });
+      }
+      else {
+        const {
+          data: {
+            videos: { results: videoKeys },
+          },
+        } = await tvApi.showDetail(id);
+        this.setState({ videoKeys });
+      }
     } catch {
       this.setState({
         error: "Can't get videos😅",
@@ -33,8 +43,12 @@ export default class VideoTab extends React.Component {
     const {
       match: {
         params: { id },
+        url,
       },
     } = this.props;
+    if (url.includes("/show")) {
+      await this.setState({ isMovie: false });
+    }
     this.getVideoKeys(id);
   }
 

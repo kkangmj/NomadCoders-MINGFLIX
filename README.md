@@ -34,4 +34,6 @@ Nomad Coder의 ReactJS 멤버십 course + 2 week challenge
 - [x] 검색 버그 해결하기
 - [x] detail에서 화면 크기 상관 없이 포스터 비율 유지되도록
 - [ ] IMDB & Tabs 손보기
+- [ ] search 검색 결과 유지되도록 (ex. 'code' 검색 후 결과 클릭한 뒤 뒤로가기 하면 검색 결과가 사라지는 현상)
+- [ ] detail에서 배경 이미지가 없는 경우 대체 방안 포함
 - [ ] 반응형 웹으로 만들기
