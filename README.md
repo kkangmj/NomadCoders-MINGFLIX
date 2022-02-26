@@ -1,6 +1,14 @@
-# MINGFLIX
+# **MINGFLIX**
 
-Nomad Coder의 ReactJS 멤버십 course + 2 week challenge
+<p align="center">
+<img src="https://user-images.githubusercontent.com/52561963/155825049-678e4db2-ef90-45ba-b1f7-e72adb38913f.png" width="500">
+</p>
+
+<p align="center">
+<u>https://mingflix.netlify.app</u>
+</p>
+
+<br>
 
 ## Screens
 
@@ -8,6 +16,8 @@ Nomad Coder의 ReactJS 멤버십 course + 2 week challenge
 - [x] TV Shows
 - [x] Search
 - [x] Detail
+
+<br>
 
 ## API Verbs
 
@@ -20,20 +30,13 @@ Nomad Coder의 ReactJS 멤버십 course + 2 week challenge
 - [x] Movie Detail
 - [x] Search (Movie, TV)
 
-## Code Challenges
+<br>
 
-- [x] IMDB Link
-- [ ] Tabs inside of Movie / Show Details (YT Videos, Production Company & Countries)
-- [ ] Collections Link
-- [ ] /collections Route
+## Detail
 
-## ISSUE
+- 노마드 코더의 ReactJS 강의 수강
+- ReactJS 2주 완성반 졸업 작품을 커스터마이징함.
 
-- [x] grid 이해하기
-- [x] 아이콘 바꾸기
-- [x] 검색 버그 해결하기
-- [x] detail에서 화면 크기 상관 없이 포스터 비율 유지되도록
-- [ ] IMDB & Tabs 손보기
-- [ ] search 검색 결과 유지되도록 (ex. 'code' 검색 후 결과 클릭한 뒤 뒤로가기 하면 검색 결과가 사라지는 현상)
-- [ ] detail에서 배경 이미지가 없는 경우 대체 방안 포함
-- [ ] 반응형 웹으로 만들기
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/52561963/155825950-32b7ef15-1266-4223-81ac-d3cbbdd80fff.png" width="500">
+</p>
